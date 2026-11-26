@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KasKelas - Pengelolaan Uang Kas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">K</div>
+      <div>
+        <strong>KasKelas</strong>
+        <span>Kelas XI PPLG</span>
+      </div>
+    </div>
+
+    <nav class="nav-list">
+      <button class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">⌂</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-page="transactions">
+        <span class="nav-icon">⇄</span>
+        <span>Transaksi</span>
+      </button>
+      <button class="nav-item" data-page="members">
+        <span class="nav-icon">♙</span>
+        <span>Anggota</span>
+      </button>
+      <button class="nav-item" data-page="reports">
+        <span class="nav-icon">▤</span>
+        <span>Laporan</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="profile-avatar">FA</div>
+      <div class="profile-info">
+        <strong>Fajar Juniarta</strong>
+        <span>Bendahara</span>
+      </div>
+      <button class="profile-menu" aria-label="Menu profil">⋮</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Selamat datang kembali</p>
+        <h1>Dashboard</h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-button" aria-label="Notifikasi">♢</button>
+        <button class="primary-button" id="openTransactionModal">
+          <span>＋</span> Tambah Transaksi
+        </button>
+      </div>
+    </header>
+
+    <section class="dashboard page active" id="dashboard">
+      <div class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-icon green">Rp</div>
+          <div>
+            <span>Saldo Kas</span>
+            <strong id="balanceValue">Rp 0</strong>
+            <small class="positive">↗ Semua transaksi tercatat</small>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon blue">↓</div>
+          <div>
+            <span>Total Pemasukan</span>
+            <strong id="incomeValue">Rp 0</strong>
+            <small id="incomeCount">0 transaksi</small>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon orange">↑</div>
+          <div>
+            <span>Total Pengeluaran</span>
+            <strong id="expenseValue">Rp 0</strong>
+            <small id="expenseCount">0 transaksi</small>
+          </div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon purple">♙</div>
+          <div>
+            <span>Status Pembayaran</span>
+            <strong id="paidMembers">0 / 0</strong>
+            <small>Anggota sudah membayar</small>
+          </div>
+        </article>
+      </div>
+
+      <div class="content-grid">
+        <article class="card chart-card">
+          <div class="card-header">
+            <div>
+              <h2>Arus Kas</h2>
+              <p>Pemasukan dan pengeluaran 6 bulan terakhir</p>
+            </div>
+            <select id="chartPeriod" aria-label="Periode arus kas">
+              <option>6 Bulan Terakhir</option>
+              <option>3 Bulan Terakhir</option>
+            </select>
+          </div>
+          <div class="chart" id="cashChart">
+            <div class="chart-y-axis">
+              <span>Rp 2jt</span><span>Rp 1,5jt</span><span>Rp 1jt</span><span>Rp 500rb</span><span>0</span>
+            </div>
+            <div class="chart-area" id="chartArea"></div>
+          </div>
+        </article>
+
+        <article class="card payment-card">
+          <div class="card-header">
+            <div>
+              <h2>Pembayaran Bulan Ini</h2>
+              <p id="paymentMonth">November 2026</p>
+            </div>
+            <button class="text-button" data-go="members">Lihat semua</button>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-head">
+              <span>Progress pembayaran</span>
+              <strong id="paymentPercent">0%</strong>
+            </div>
+            <div class="progress-track"><div class="progress-bar" id="paymentProgress"></div></div>
+          </div>
+          <div class="member-list" id="memberPreview"></div>
+        </article>
+      </div>
+
+      <article class="card recent-card">
+        <div class="card-header">
+          <div>
+            <h2>Transaksi Terbaru</h2>
+            <p>Aktivitas keuangan terkini</p>
+          </div>
+          <button class="text-button" data-go="transactions">Lihat semua</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Tipe</th><th class="align-right">Jumlah</th></tr></thead>
+            <tbody id="recentTransactions"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="transactions">
+      <article class="card">
+        <div class="card-header">
+          <div><h2>Semua Transaksi</h2><p>Riwayat pemasukan dan pengeluaran kas</p></div>
+          <button class="primary-button" id="openTransactionModal2">＋ Tambah Transaksi</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Tipe</th><th class="align-right">Jumlah</th><th></th></tr></thead>
+            <tbody id="allTransactions"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="members">
+      <article class="card">
+        <div class="card-header">
+          <div><h2>Daftar Anggota</h2><p>Status iuran kas kelas</p></div>
+          <button class="secondary-button" id="resetPayments">Reset Bulan Ini</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nama</th><th>NIS</th><th>Status</th><th>Tanggal Bayar</th><th></th></tr></thead>
+            <tbody id="memberTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="reports">
+      <article class="card">
+        <div class="card-header">
+          <div><h2>Laporan Keuangan</h2><p>Ringkasan saldo dan transaksi kas</p></div>
+          <button class="secondary-button" id="exportReport">↓ Unduh CSV</button>
+        </div>
+        <div class="report-summary">
+          <div><span>Pemasukan</span><strong id="reportIncome">Rp 0</strong></div>
+          <div><span>Pengeluaran</span><strong id="reportExpense">Rp 0</strong></div>
+          <div><span>Saldo Akhir</span><strong id="reportBalance">Rp 0</strong></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="transactionModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div><p class="eyebrow">Transaksi baru</p><h2 id="modalTitle">Tambah Transaksi</h2></div>
+        <button class="close-button" id="closeModal" aria-label="Tutup">×</button>
+      </div>
+      <form id="transactionForm">
+        <div class="form-grid">
+          <label>Tipe Transaksi
+            <select id="transactionType" required>
+              <option value="income">Pemasukan</option>
+              <option value="expense">Pengeluaran</option>
+            </select>
+          </label>
+          <label>Tanggal
+            <input type="date" id="transactionDate" required>
+          </label>
+          <label class="full-width">Keterangan
+            <input type="text" id="transactionDescription" placeholder="Contoh: Iuran kas November" required>
+          </label>
+          <label>Jumlah
+            <input type="number" id="transactionAmount" min="1" placeholder="0" required>
+          </label>
+          <label>Kategori
+            <select id="transactionCategory" required>
+              <option>Iuran</option>
+              <option>Acara</option>
+              <option>Perlengkapan</option>
+              <option>Lainnya</option>
+            </select>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="secondary-button" id="cancelModal">Batal</button>
+          <button type="submit" class="primary-button">Simpan Transaksi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Transaksi berhasil disimpan</div>
+  <script src="script.js"></script>
+</body>
+</html>
